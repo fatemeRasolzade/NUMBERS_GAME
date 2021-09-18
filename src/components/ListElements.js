@@ -1,11 +1,11 @@
 import React from 'react'
 
-const ListElements = ({number, index, playing, sortNumbers, handleDragStart, handleDragEnter}) => {
+const ListElements = ({number, index, finishing, sortNumbers, handleDragStart, handleDragEnter}) => {
     return (
         <li
-            className={playing === false ?
+            className={finishing === true ?
                 number === sortNumbers[index] ? "bg-success" : "bg-danger": "bg-secondary"}
-            draggable
+            draggable= {finishing === true ? false : true}
             key={index}
             onDragStart={() => handleDragStart(index)}
             onDragEnter={(e) => handleDragEnter(e, index)}
