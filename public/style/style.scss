@@ -5,7 +5,12 @@
 li{
     list-style: none;
 }
+div.is-disabled{
+  pointer-events: none;
+  opacity: 0.7;
+}
 .App{
+    background: -webkit-linear-gradient(right, rgba(250,250,250,.9), rgba(250,250,250,.8)) ,url("../img/game-bg.jpg");
     width: 100vw;
     height: 100vh;
     display: flex;
@@ -18,11 +23,16 @@ li{
         padding: 10px 0;
         margin: 10px 0;
         text-align: center;
-        background: rosybrown;
         width: 15rem;
-        border-radius: 50px;
+        border-radius: 10px;
         font-size: 1.3rem;
     }li:hover{
         cursor: pointer;
     }
+}
+button{
+    background: transparent;
+    border: 1px solid black;
+    border-radius: 50px;
+    padding: 5px 7px;
 }

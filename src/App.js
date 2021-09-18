@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from 'react'
+import ListElements from './components/ListElements'
+// import ResetModal from './components/ResetModal'
 
 const array = () => {
   let arr = []
-  for (let j = 0; j < 5; j++) {
-    let randomNumber = Math.floor(Math.random() * 50)
-    arr.push(randomNumber)
+  for (let j = 0; j < 8; j++) {
+    let randomNumber = Math.floor(Math.random() * 99)
+    const isNumber = arr.find(n => n === randomNumber)
+    if(!isNumber){
+      arr.push(randomNumber)
+    }else{
+      j--
+    }
   }
   return arr
 }
@@ -13,14 +20,40 @@ const App = () => {
 
   const [dragNumber, setDragNumber] = useState();
   const [numbers, setNumbers] = useState(array);
-  const [win, setWin] = useState(0);
-  const [playing, setPlaying] = useState(false)
-  const [userNumbers, setUserNumbers] = useState([]);
+  const [playing, setPlaying] = useState()
+  const [win, setWin] = useState(false)
   const [sortNumbers, setSortNumbers] = useState([]);
+  const [counter, setCounter] = useState(20)
+  const [openModal, setOpenModal] = useState(false)
+
+  const handleOpenModal = () => {
+    setOpenModal(true)
+  }
+
+  const handleCloseModal = () => {
+    setOpenModal(false)
+  }
 
   useEffect(() => {
     
-  }, [numbers])
+    if(playing){
+      let timer = setInterval(() => {
+        if(win === true){
+          clearInterval(timer)
+          setPlaying(false)
+          handleOpenModal()
+        }else if( counter > 0){
+          setCounter(counter-1)
+        }else{
+          setWin(false)
+          clearInterval(timer)
+          setPlaying(false)
+          handleOpenModal()
+        }
+      }, 1000);
+      return () => clearInterval(timer)
+    }
+  }, [counter,playing])
 
   const handleDragStart = (index) => {
     setDragNumber(index);
@@ -28,7 +61,7 @@ const App = () => {
   };
   
   const handleDragEnter = (e,index) => {
-    
+    setPlaying(true)
     const newNumbers = [...numbers];
     const item = newNumbers[dragNumber];
     newNumbers.splice(dragNumber, 1);
@@ -36,17 +69,8 @@ const App = () => {
     setDragNumber(index);
     setNumbers(newNumbers);
     const sortnumbers = numbers.sort((a , b)=> a - b)
-    // console.log(newNumbers);
-    // console.log(sortnumbers);
-    // setUserNumbers(newNumbers)
     setSortNumbers(sortnumbers)
-    // console.log(userNumbers);
-    // console.log(sortNumbers);
     arraysEqual(sortnumbers,newNumbers)
-    // setTimeout(() => {
-      
-    //   arraysEqual(sortNumbers, userNumbers)
-    // }, 2000);
   };
 
   const arraysEqual = (a, b) => { 
@@ -55,31 +79,29 @@ const App = () => {
         return false;
       } 
     }
-    console.log("Win");
-    // setWin(1)
+    setWin(true)
     return true;
   }
 
   return (
     <div className="App">
         <ul className="number-container">
+          <p style={{fontSize: '1.2rem'}}>Time left: <span className={counter<=5 ? "text-danger" : ""}>{counter}s</span></p>
           {numbers.map((n, index) => (
-              <li
-                // className={win !== 0 ?
-                //                win === 1 ?
-                //                   "bg-success":"bg-danger":"bg-secondary"
-                                
-                //                 }
-                draggable
-                key={index}
-                onDragStart={() => handleDragStart(index)}
-                onDragEnter={(e) => handleDragEnter(e, index)}
-                onDragOver={(e) => e.preventDefault()}
-              >
-                {n}
-              </li>
+              <ListElements
+              playing={playing}
+                number={n}
+                index={index}
+                sortNumbers={sortNumbers}
+                handleDragStart={handleDragStart}
+                handleDragEnter={handleDragEnter}
+              />
           ))}
         </ul>
+        {/* <ResetModal
+          open={openModal}
+          handleClose={handleCloseModal}
+        /> */} 
     </div>
   )
 }
