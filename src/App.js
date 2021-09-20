@@ -70,10 +70,10 @@ const App = () => {
   }
 
   return (
-    <div className="App">
+      <div className="App">
         <ul className="number-container">
           <p style={{fontSize: '1.2rem'}}>Time left: <span className={counter<=5 ? "text-danger" : ""}>{counter}s</span></p>
-          {numbers.map((n, index) => (
+            {numbers.map((n, index) => (
               <ListElements
                 playing={playing}
                 finishing={finishing}
@@ -83,9 +83,9 @@ const App = () => {
                 handleDragStart={handleDragStart}
                 handleDragEnter={handleDragEnter}
               />
-          ))}
+            ))}
         </ul>
-    </div>
+      </div>
   )
 }
 
